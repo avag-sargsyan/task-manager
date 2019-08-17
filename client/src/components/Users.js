@@ -1,18 +1,55 @@
 import React, { Component } from 'react';
-import TextField from '@material-ui/core/TextField';
+import MaterialTable from 'material-table';
 
-class Users extends Component {
-    constructor(props) {
-        super(props);
-    }
+export default function MaterialTableDemo() {
+    const [state, setState] = React.useState({
+        columns: [
+            { title: 'Login', field: 'login' },
+            { title: 'Email', field: 'email' },
+            { title: 'Name', field: 'name'},
+            { title: 'Role', field: 'role'}
+        ],
+        data: [
+            {"id":"1","login":"administrator","password":'admin123',"email":"admin@mail.com","name":"Administrator","role":"Admin"},
+            {"id":"2","login":"pm","password":'admin123',"email":"pm@mail.com","name":"Project Manager","role":"PM"},
+            {"id":"3","login":"developer","password":'admin123',"email":"devloper@mail.com","name":"Developer","role":"Developer"}
+        ],
+    });
 
-    render() {
-        return (
-            <div>
-
-            </div>
-        );
-    }
+    return (
+        <MaterialTable
+            title="Editable Example"
+            columns={state.columns}
+            data={state.data}
+            editable={{
+                onRowAdd: newData =>
+                    new Promise(resolve => {
+                        setTimeout(() => {
+                            resolve();
+                            const data = [...state.data];
+                            data.push(newData);
+                            setState({ ...state, data });
+                        }, 600);
+                    }),
+                onRowUpdate: (newData, oldData) =>
+                    new Promise(resolve => {
+                        setTimeout(() => {
+                            resolve();
+                            const data = [...state.data];
+                            data[data.indexOf(oldData)] = newData;
+                            setState({ ...state, data });
+                        }, 600);
+                    }),
+                onRowDelete: oldData =>
+                    new Promise(resolve => {
+                        setTimeout(() => {
+                            resolve();
+                            const data = [...state.data];
+                            data.splice(data.indexOf(oldData), 1);
+                            setState({ ...state, data });
+                        }, 600);
+                    }),
+            }}
+        />
+    );
 }
-
-export default Users;
