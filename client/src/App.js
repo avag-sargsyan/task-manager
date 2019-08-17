@@ -1,5 +1,5 @@
 import React from 'react';
-import AppNavbar from './components/AppNavbar';
+import NavBar from './components/NavBar';
 import LoginModal from './components/LoginModal';
 import Users from './components/Users';
 import Reports from './components/Reports';
@@ -10,7 +10,7 @@ import './App.css';
 function App() {
   return (
     <div className="App">
-      <AppNavbar />
+      <NavBar />
       <LoginModal />
       <Users />
       <Reports />
