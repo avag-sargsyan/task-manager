@@ -18,7 +18,7 @@ export default function MaterialTableDemo() {
 
     return (
         <MaterialTable
-            title="Editable Example"
+            title="Users"
             columns={state.columns}
             data={state.data}
             editable={{
