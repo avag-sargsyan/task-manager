@@ -1,55 +1,59 @@
 import React, { Component } from 'react';
-import MaterialTable from 'material-table';
+import { makeStyles } from '@material-ui/core/styles';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import { connect } from 'react-redux';
+import { getUsers } from '../actions/userActions';
+import PropTypes from 'prop-types';
 
-export default function MaterialTableDemo() {
-    const [state, setState] = React.useState({
-        columns: [
-            { title: 'Login', field: 'login' },
-            { title: 'Email', field: 'email' },
-            { title: 'Name', field: 'name'},
-            { title: 'Role', field: 'role'}
-        ],
-        data: [
-            {"id":"1","login":"administrator","password":'admin123',"email":"admin@mail.com","name":"Administrator","role":"Admin"},
-            {"id":"2","login":"pm","password":'admin123',"email":"pm@mail.com","name":"Project Manager","role":"PM"},
-            {"id":"3","login":"developer","password":'admin123',"email":"devloper@mail.com","name":"Developer","role":"Developer"}
-        ],
-    });
+class Users extends Component {
+    static propTypes = {
+        getReports: PropTypes.func.isRequired,
+        user: PropTypes.object.isRequired,
+        isAuthenticated: PropTypes.bool
+    };
 
-    return (
-        <MaterialTable
-            title="Users"
-            columns={state.columns}
-            data={state.data}
-            editable={{
-                onRowAdd: newData =>
-                    new Promise(resolve => {
-                        setTimeout(() => {
-                            resolve();
-                            const data = [...state.data];
-                            data.push(newData);
-                            setState({ ...state, data });
-                        }, 600);
-                    }),
-                onRowUpdate: (newData, oldData) =>
-                    new Promise(resolve => {
-                        setTimeout(() => {
-                            resolve();
-                            const data = [...state.data];
-                            data[data.indexOf(oldData)] = newData;
-                            setState({ ...state, data });
-                        }, 600);
-                    }),
-                onRowDelete: oldData =>
-                    new Promise(resolve => {
-                        setTimeout(() => {
-                            resolve();
-                            const data = [...state.data];
-                            data.splice(data.indexOf(oldData), 1);
-                            setState({ ...state, data });
-                        }, 600);
-                    }),
-            }}
-        />
-    );
+    componentDidMount() {
+        this.props.getUsers();
+    };
+
+    render() {
+        const { users } = this.props.users;
+        return (
+            <Paper>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Login</TableCell>
+                            <TableCell align="right">Email</TableCell>
+                            <TableCell align="right">Name</TableCell>
+                            <TableCell align="right">Role</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {users.map(row => (
+                            <TableRow key={row.login}>
+                                <TableCell component="th" scope="row">
+                                    {row.login}
+                                </TableCell>
+                                <TableCell align="right">{row.email}</TableCell>
+                                <TableCell align="right">{row.name}</TableCell>
+                                <TableCell align="right">{row.role}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+            </Paper>
+        );
+    }
 }
+
+const mapStateToProps = (state) => ({
+    user: state.user
+});
+
+export default connect(mapStateToProps, { getUsers })(Users);

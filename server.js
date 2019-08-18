@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+const http = require("http");
+const socketIo = require("socket.io");
 
 // Database
 const db = require('./config/database');
@@ -21,3 +23,6 @@ app.use('/admin/auth', require('./routes/admin/auth'));
 const port = process.env.PORT || 5000;
 
 app.listen(port, () => console.log(`Server started on port ${port}`));
+
+const server = http.createServer(app);
+const io = socketIo(server);
